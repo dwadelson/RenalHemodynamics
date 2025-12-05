@@ -61,12 +61,20 @@ ui <- fluidPage(
         value = TRUE
       ),
       sliderInput(
+        "pressure_ymax",
+        "Pressure plot max",
+        min   = 25,
+        max   = 200,
+        value = 120,   
+        step  = 25
+      ),
+      sliderInput(
         "res_ymax",
         "Arteriolar resistance scale max",
-        min   = 50,
+        min   = 20,
         max   = 1000,
-        value = 60,   # good default based on your parameter ranges
-        step  = 50
+        value = 60,   
+        step  = 20
       )
     ),
     

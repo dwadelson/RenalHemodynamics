@@ -155,8 +155,8 @@ server <- function(input, output, session) {
         guide  = "none"
       ) +
       scale_y_continuous(
-        limits = c(0, 140),
-        breaks = seq(0, 140, by = 10),
+        limits = c(0, input$pressure_ymax),
+        breaks = seq(0, input$pressure_ymax, by = 10),
         name   = "Pressure (mmHg)"
       ) +
       labs(
