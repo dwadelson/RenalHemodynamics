@@ -59,8 +59,17 @@ ui <- fluidPage(
         "show_flow",
         label = "Show RBF & GFR plot",
         value = TRUE
+      ),
+      sliderInput(
+        "res_ymax",
+        "Arteriolar resistance scale max",
+        min   = 50,
+        max   = 1000,
+        value = 60,   # good default based on your parameter ranges
+        step  = 50
       )
     ),
+    
     
     # -------- MIDDLE COLUMN: PRESSURES & RESISTANCES --------
     column(

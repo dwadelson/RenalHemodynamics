@@ -214,7 +214,7 @@ server <- function(input, output, session) {
   output$resHist <- renderPlot({
     df <- resistances()
     
-    ymax <- max(df$Resistance) * 1.2
+    ymax <- input$res_ymax
     
     ggplot(df, aes(x = vessel, y = Resistance, fill = vessel)) +
       geom_col(width = 0.6) +
