@@ -5,7 +5,7 @@ library(ggplot2)
 library(dplyr)
 
 # Set this to TRUE when debugging on the server
-DIAGNOSTICS <- TRUE
+DIAGNOSTICS <- FALSE
 
 #on the server, point to the up to date libraries
 shared_lib <- "/home/elac/shiny_public/libraries_4.4"
