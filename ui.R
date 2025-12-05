@@ -70,12 +70,12 @@ ui <- fluidPage(
         column(
           width = 8,
           h5("Pressure profile and diameters"),
-          plotOutput("diameterPlot", height = "500px")
+          plotOutput("diameterPlot", height = "700px")
         ),
         column(
           width = 4,
           h5("Arteriolar resistances"),
-          plotOutput("resHist", height = "500px")
+          plotOutput("resHist", height = "700px")
         )
       ),
       # (optional) text summary under the plots:
@@ -88,7 +88,7 @@ ui <- fluidPage(
       width = 3,
       #h4("Flows"),
       h5("RBF and GFR"),
-      plotOutput("flowHist", height = "500px")
+      plotOutput("flowHist", height = "700px")
     )
   ),
   
