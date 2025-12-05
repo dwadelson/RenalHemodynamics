@@ -16,6 +16,17 @@ server <- function(input, output, session) {
     baseline_hemo()
   })
   
+  # Relative changes vs baseline
+  rel_changes <- reactive({
+    compute_relative_changes(hemo())
+  })
+  
+  # Absolute RBF and GFR (mL/min), scaled to physiological baselines
+  abs_values <- reactive({
+    compute_absolute_rbf_gfr(hemo())
+  })
+  
+  
   # --- Layout constants for x positions -------------------------------------
   # Short segments left-to-right: artery -> glomerulus -> peritubular -> vein
   x_RA_start <- 0.0; x_RA_end <- 0.2
@@ -54,7 +65,7 @@ server <- function(input, output, session) {
       label   = c(
         paste0("Renal artery\n(",           round(Pa, 1), " mmHg)"),
         paste0("Glomerular capillaries\n(", round(P_gc, 1), " mmHg)"),
-        paste0("Peritubular capillaries\n(", round(P_pc, 1), " mmHg)"),
+        paste0("Peritubular\ncapillaries\n(", round(P_pc, 1), " mmHg)"),
         paste0("Renal vein\n(",             round(local_Pv, 1), " mmHg)")
       )
     ) |>
@@ -77,7 +88,7 @@ server <- function(input, output, session) {
       x      = c(aff_x, eff_x),
       y      = c(aff_y, eff_y),
       diam   = c(h$d_aff, h$d_eff),
-      label  = c("Afferent", "Efferent")
+      label  = c("Afferent\narteriole", "Efferent\narteriole")
     )
     
     ggplot() +
@@ -91,7 +102,7 @@ server <- function(input, output, session) {
       geom_text(
         data = seg_df,
         aes(x = x_mid, y = P_label, label = label),
-        size = 5
+        size = 4
       ) +
       # Arteriole circles
       geom_point(
@@ -103,7 +114,7 @@ server <- function(input, output, session) {
       geom_text(
         data = circle_df,
         aes(x = x, y = y, label = label),
-        size = 4.5,
+        size = 3,
         fontface = "bold"
       ) +
       scale_size_continuous(
@@ -130,20 +141,50 @@ server <- function(input, output, session) {
         legend.title = element_blank(),
         plot.margin = margin(5.5, 20, 5.5, 5.5)
       )
-  })
+  })  #diameterPlot
+  
+  # Bar plot showing absolute RBF and GFR (mL/min)
+  output$flowHist <- renderPlot({
+    df <- abs_values()
+    
+    ymax <- max(1500, max(df$Value) * 1.1)  # headroom
+    
+    ggplot(df, aes(x = Variable, y = Value, fill = Variable)) +
+      geom_col(width = 0.6) +
+      geom_text(
+        aes(label = sprintf("%.0f mL/min", Value)),
+        vjust = -0.5,
+        size = 5
+      ) +
+      scale_fill_manual(values = c(
+        "Renal blood flow" = "red",
+        "GFR"              = "yellow"
+      )) +
+      scale_y_continuous(
+        limits = c(0, ymax),
+        name   = "Flow / filtration (mL/min)"
+      ) +
+      labs(x = NULL) +
+      theme_minimal(base_size = 16) +
+      theme(
+        legend.position = "none",   # remove legend (optional)
+        axis.text.x = element_text(vjust = 0.5),
+        plot.margin = margin(10, 10, 10, 10)
+      )
+  }) #flowHist
   
   # --- Text outputs ---------------------------------------------------------
   
-  output$pressureText <- renderPrint({
-    h <- hemo()
-    
-    cat(
-      sprintf("Renal mean arterial pressure:       %5.1f mmHg\n", h$Pa),
-      sprintf("Glomerular capillary pressure: %5.1f mmHg\n", h$P_gc),
-      sprintf("Peritubular capillary pressure:%5.1f mmHg\n", h$P_pc),
-      sprintf("Renal venous pressure:         %5.1f mmHg\n", Pv)
-    )
-  })
+  # output$pressureText <- renderPrint({
+  #   h <- hemo()
+  #   
+  #   cat(
+  #     sprintf("Renal mean arterial pressure:       %5.1f mmHg\n", h$Pa),
+  #     sprintf("Glomerular capillary pressure: %5.1f mmHg\n", h$P_gc),
+  #     sprintf("Peritubular capillary pressure:%5.1f mmHg\n", h$P_pc),
+  #     sprintf("Renal venous pressure:         %5.1f mmHg\n", Pv)
+  #   )
+  # })
   
   output$flowText <- renderPrint({
     h  <- hemo()
@@ -153,11 +194,7 @@ server <- function(input, output, session) {
     rel_NFP <- h$NFP / bl$NFP0
     
     cat(
-      sprintf("Relative renal blood flow (Q):   %5.2f (baseline = 1.00 at Pa = %g mmHg, d_aff = d_eff = %g µm)\n",
-              rel_Q,  baselinePa, dref),
-      sprintf("Net filtration pressure (NFP*):  %5.2f (same baseline)\n", rel_NFP),
-      "\n",
-      "*NFP is a simplified proxy for filtration:\n",
+      "Net Filtration Pressure (NFP) is a simplified proxy for filtration:\n",
       "  NFP ≈ P_gc - P_Bowman's space - π_gc\n",
       "  (Bowman's space and oncotic pressures held constant in this model.)\n"
     )

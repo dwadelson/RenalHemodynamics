@@ -3,77 +3,82 @@
 ui <- fluidPage(
   titlePanel("Arteriolar Diameter and Glomerular Hemodynamics"),
   
-  # Make verbatimTextOutput wrap instead of overflowing horizontally
+  # Styling for the text outputs:
+  # - pressureText: wraps nicely
+  # - flowText: no word wrap, horizontal scroll if long
   tags$style(HTML("
-    #pressureText, #flowText {
+    #pressureText {
       white-space: pre-wrap;
+    }
+    #flowText {
+      white-space: pre;
+      overflow-x: auto;
+      width: 100%;
+      display: block;
     }
   ")),
   
-  sidebarLayout(
-    sidebarPanel(
+  # Main 3-column layout: sliders | main hemo plot | RBF/GFR bars
+  fluidRow(
+    # Column 1: controls
+    column(
       width = 3,
       h4("Adjust hemodynamics"),
       sliderInput(
-        inputId = "Pa",
-        label   = "Renal arterial pressure (mmHg)",
-        min     = 70,
-        max     = 130,
-        value   = 90,
-        step    = 1
+        "Pa", "Renal arterial pressure (mmHg)",
+        min   = 60, max = 180,
+        value = baselinePa,
+        step  = 5
       ),
       sliderInput(
-        inputId = "d_aff",
-        label   = "Afferent arteriole diameter (µm)",
-        min     = 10,
-        max     = 30,
-        value   = 20,
-        step    = 1
+        "d_aff", "Afferent arteriole diameter (µm)",
+        min   = 10, max = 30,
+        value = d_aff_baseline,
+        step  = 1
       ),
       sliderInput(
-        inputId = "d_eff",
-        label   = "Efferent arteriole diameter (µm)",
-        min     = 10,
-        max     = 30,
-        value   = 20,
-        step    = 1
-      ),
-      hr(),
-      helpText(
-        "Smaller diameter = higher resistance (Poiseuille). ",
-        "Changes in resistance and arterial pressure alter renal blood flow ",
-        "and the pressure profile along the vasculature."
+        "d_eff", "Efferent arteriole diameter (µm)",
+        min   = 10, max = 30,
+        value = d_eff_baseline,
+        step  = 1
       )
     ),
     
-    mainPanel(
-      width = 9,
-      fluidRow(
-        column(
-          width = 12,
-          plotOutput("diameterPlot", height = "550px")
-        )
-      ),
-      hr(),
-      fluidRow(
-        column(
-          width = 6,
-          h4("Pressures"),
-          verbatimTextOutput("pressureText")
-        ),
-        column(
-          width = 6,
-          h4("Flow & Filtration (relative)"),
-          verbatimTextOutput("flowText")
-        )
-      ),
-      if (DIAGNOSTICS) {
-        tagList(
-          hr(),
-          h4("Diagnostics (server environment)"),
-          verbatimTextOutput("diagnostics")
-        )
-      }
+    # Column 2: combined pressures + diameter plot + pressure text
+    column(
+      width = 5,
+      h4("Pressures and arteriolar diameters"),
+      plotOutput("diameterPlot", height = "500px"),
+      h5("Key pressures (mmHg)"),
+      verbatimTextOutput("pressureText")
+    ),
+    
+    # Column 3: absolute RBF & GFR bar plot
+    column(
+      width = 4,
+      h4("Renal blood flow and GFR"),
+      plotOutput("flowHist", height = "500px")
     )
-  )
+  ),
+  
+  # Full-width row: flow & filtration text (no wrapping)
+  fluidRow(
+    column(
+      width = 12,
+      h4("Assumptions"),
+      verbatimTextOutput("flowText")
+    )
+  ),
+  
+  # Optional diagnostics at the bottom when DIAGNOSTICS == TRUE
+  if (DIAGNOSTICS) {
+    fluidRow(
+      column(
+        width = 12,
+        hr(),
+        h4("Diagnostics (server environment)"),
+        verbatimTextOutput("diagnostics")
+      )
+    )
+  }
 )
