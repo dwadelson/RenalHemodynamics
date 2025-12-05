@@ -65,9 +65,13 @@ ui <- fluidPage(
           verbatimTextOutput("flowText")
         )
       ),
-      hr(),
-      h4("Diagnostics (server environment)"),
-      verbatimTextOutput("diagnostics")
+      if (DIAGNOSTICS) {
+        tagList(
+          hr(),
+          h4("Diagnostics (server environment)"),
+          verbatimTextOutput("diagnostics")
+        )
+      }
     )
   )
 )
