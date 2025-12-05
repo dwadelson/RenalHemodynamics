@@ -15,4 +15,5 @@ if (dir.exists(shared_lib)) {
 
 # Source the hemodynamic model (defines compute_hemo, baseline_hemo, Pv, baselinePa, dref)
 source("model.R")
+source("constraints.R")
 

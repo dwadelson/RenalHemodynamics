@@ -41,6 +41,17 @@ ui <- fluidPage(
         min   = 10, max = 30,
         value = d_eff_baseline,
         step  = 1
+      ),
+      radioButtons(
+        "res_mode",
+        label   = "Arteriolar constraint",
+        choices = c(
+          "Free"                     = "free",
+          "Lock Ra/Re ratio"         = "ratio",
+          "Lock (Ra + Re) total"     = "sum"
+        ),
+        selected = "free",
+        inline   = FALSE
       )
     ),
     

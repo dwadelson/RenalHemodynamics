@@ -2,6 +2,16 @@
 
 server <- function(input, output, session) {
   
+  sync_state <- reactiveValues(syncing = FALSE)
+  
+  install_constraint_observers(
+    input, session,
+    d_aff_baseline = d_aff_baseline,
+    d_eff_baseline = d_eff_baseline,
+    Ra0 = Ra0, Re0 = Re0,
+    sync_state = sync_state
+  )
+  
   # Reactives wrapping the model functions from model.R ----------------------
   
   hemo <- reactive({
