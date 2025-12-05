@@ -24,7 +24,6 @@ ui <- fluidPage(
     column(
       width = 2,
       h4("Adjust hemodynamics"),
-      
       sliderInput(
         "Pa", "Renal arterial pressure (mmHg)",
         min   = 60,
@@ -46,7 +45,6 @@ ui <- fluidPage(
         value = d_eff_baseline,
         step  = 1
       ),
-      
       radioButtons(
         "res_mode",
         label   = "Arteriolar constraint",
@@ -56,34 +54,41 @@ ui <- fluidPage(
           "Lock (Ra + Re) total" = "sum"
         ),
         selected = "free"
+      ),
+      checkboxInput(
+        "show_flow",
+        label = "Show RBF & GFR plot",
+        value = TRUE
       )
     ),
     
-    # -------- MIDDLE COLUMN: PRESSURES & DIAMETERS --------
+    # -------- MIDDLE COLUMN: PRESSURES & RESISTANCES --------
     column(
-      width = 5,
-      h4("Pressures and arteriolar diameters"),
-      plotOutput("diameterPlot", height = "500px"),
-      h5("Key pressures (mmHg)"),
-      verbatimTextOutput("pressureText")
-    ),
-    
-    # -------- RIGHT COLUMN: FLOWS & RESISTANCES --------
-    column(
-      width = 5,
-      h4("Flows and arteriolar resistances"),
+      width = 7,
+     # h4("Pressures and arteriolar diameters"),
       fluidRow(
         column(
-          width = 6,
-          h5("RBF and GFR"),
-          plotOutput("flowHist", height = "500px")
+          width = 8,
+          h5("Pressure profile and diameters"),
+          plotOutput("diameterPlot", height = "500px")
         ),
         column(
-          width = 6,
+          width = 4,
           h5("Ra and Re"),
           plotOutput("resHist", height = "500px")
         )
-      )
+      ),
+      # (optional) text summary under the plots:
+      # h5("Key pressures (mmHg)"),
+      # verbatimTextOutput("pressureText")
+    ),
+    
+    # -------- RIGHT COLUMN: FLOWS --------
+    column(
+      width = 3,
+      #h4("Flows"),
+      h5("RBF and GFR"),
+      plotOutput("flowHist", height = "500px")
     )
   ),
   

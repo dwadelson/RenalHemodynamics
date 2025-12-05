@@ -150,10 +150,10 @@ server <- function(input, output, session) {
         name   = "Pressure (mmHg)"
       ) +
       coord_cartesian(xlim = c(-0.05, 1.45)) +
-      labs(
-        title = "Pressure profile and arteriolar diameters",
-        x = NULL
-      ) +
+      # labs(
+      #   title = "Pressure profile and arteriolar diameters",
+      #   x = NULL
+      # ) +
       theme_minimal(base_size = 14) +
       theme(
         axis.text.x  = element_blank(),
@@ -167,6 +167,8 @@ server <- function(input, output, session) {
   
   # Bar plot showing absolute RBF and GFR (mL/min)
   output$flowHist <- renderPlot({
+    req(input$show_flow)   # only draw if checkbox is TRUE
+    
     df <- abs_values()
     
     ymax <- max(1500, max(df$Value) * 1.1)  # headroom
@@ -176,7 +178,7 @@ server <- function(input, output, session) {
       geom_text(
         aes(label = sprintf("%.0f\nmL/min", Value)),
         vjust = -0.5,
-        size = 5
+        size = 4
       ) +
       scale_fill_manual(values = c(
         "Renal blood flow" = "red",
@@ -207,7 +209,7 @@ server <- function(input, output, session) {
       geom_text(
         aes(label = sprintf("%.1f", Resistance)),
         vjust = -0.5,
-        size  = 5
+        size  = 4
       ) +
       scale_y_continuous(
         limits = c(0, ymax),
