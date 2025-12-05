@@ -180,7 +180,7 @@ server <- function(input, output, session) {
       geom_text(
         aes(label = sprintf("%.0f\nmL/min", Value)),
         vjust = -0.5,
-        size = 4
+        size = 5
       ) +
       scale_fill_manual(values = c(
         "Renal blood flow" = "red",
@@ -191,7 +191,7 @@ server <- function(input, output, session) {
         name   = "Flow / filtration (mL/min)"
       ) +
       labs(x = NULL) +
-      theme_minimal(base_size = 16) +
+      theme_minimal(base_size = 14) +
       theme(
         legend.position = "none",   # remove legend (optional)
         axis.text.x = element_text(vjust = 0.5, angle = 75),
@@ -211,14 +211,14 @@ server <- function(input, output, session) {
       geom_text(
         aes(label = sprintf("%.1f", Resistance)),
         vjust = -0.5,
-        size  = 4
+        size  = 5
       ) +
       scale_y_continuous(
         limits = c(0, ymax),
         name   = "Hybrid Resistance Units\n(mmHg * min/ml)"
       ) +
       labs(x = NULL) +
-      theme_minimal(base_size = 16) +
+      theme_minimal(base_size = 14) +
       theme(
         legend.position = "none",
         axis.text.x     = element_text(vjust = 0.5, angle = 75),

@@ -74,7 +74,7 @@ ui <- fluidPage(
         ),
         column(
           width = 4,
-          h5("Ra and Re"),
+          h5("Arteriolar resistances"),
           plotOutput("resHist", height = "500px")
         )
       ),
