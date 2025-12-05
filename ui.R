@@ -12,6 +12,7 @@ ui <- fluidPage(
   
   sidebarLayout(
     sidebarPanel(
+      width = 3,
       h4("Adjust hemodynamics"),
       sliderInput(
         inputId = "Pa",
@@ -46,10 +47,11 @@ ui <- fluidPage(
     ),
     
     mainPanel(
+      width = 9,
       fluidRow(
         column(
           width = 12,
-          plotOutput("diameterPlot", height = "400px")
+          plotOutput("diameterPlot", height = "550px")
         )
       ),
       hr(),
