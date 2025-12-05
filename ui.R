@@ -101,6 +101,15 @@ ui <- fluidPage(
     )
   ),
   
+  tags$hr(),
+  div(
+    style = "text-align:center; font-size:12px; color:#555; margin-top:10px;",
+    HTML('© 2025 David W. Adelson, Ph.D. — 
+        This work is licensed under a 
+        <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+        Creative Commons Attribution–NonCommercial–ShareAlike 4.0 International License</a>.')
+  ),
+  
   # Optional diagnostics at the bottom when DIAGNOSTICS == TRUE
   if (exists("DIAGNOSTICS") && isTRUE(DIAGNOSTICS)) {
     fluidRow(

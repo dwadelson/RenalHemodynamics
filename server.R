@@ -11,6 +11,8 @@ server <- function(input, output, session) {
     Ra0 = Ra0, Re0 = Re0,
     sync_state = sync_state
   )
+  source("diagnostics.R") 
+  #if DIAGNOSTICS are on then they'll be reported when running on the server
   
   # Reactives wrapping the model functions from model.R ----------------------
   
@@ -238,46 +240,5 @@ server <- function(input, output, session) {
       "  (Bowman's space and oncotic pressures held constant in this model.)\n"
     )
   })
-  
-  # ---- Diagnostics: run once per R session ---------------------------------
-  
-  if (DIAGNOSTICS) { 
-    diag_text <- reactiveVal("Diagnostics not yet collected.")
-    
-    observeEvent(TRUE, {
-      # Collect info
-      txt <- capture.output({
-        cat("=== Shiny diagnostics ===\n")
-        cat("Time: ", as.character(Sys.time()), "\n\n", sep = "")
-        
-        cat("R.home():\n"); print(R.home())
-        cat("R.version:\n"); print(R.version)
-
-        cat("\n.libPaths():\n"); print(.libPaths())
-        cat("\nSystem shiny path:\n"); print(system.file(package = "shiny"))
-        cat("\nSys.which('R'):\n"); print(Sys.which("R"))
-        
-        cat("\nLoaded packages:\n")
-        # sessionInfo will show ggplot2/shiny versions, etc.
-        print(sessionInfo())
-        
-        cat("\nCapabilities (png / cairo / X11):\n")
-        print(capabilities()[c("png", "cairo", "X11")])
-      })
-      
-      # Store for display in the UI
-      diag_text(paste(txt, collapse = "\n"))
-      
-      # Also send to the Shiny log once
-      if (!exists(".diag_printed", envir = .GlobalEnv)) {
-        assign(".diag_printed", TRUE, envir = .GlobalEnv)
-        cat(paste(txt, collapse = "\n"), "\n", file = stderr())
-      }
-    }, once = TRUE)
-    
-    output$diagnostics <- renderText({
-      diag_text()
-    })
-  } #if DIAGNOSTICS
   
 }
