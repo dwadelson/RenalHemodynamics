@@ -60,8 +60,6 @@ ui <- fluidPage(
       width = 5,
       h4("Pressures and arteriolar diameters"),
       plotOutput("diameterPlot", height = "500px"),
-      h5("Key pressures (mmHg)"),
-      verbatimTextOutput("pressureText")
     ),
     
     # Column 3: absolute RBF & GFR bar plot
