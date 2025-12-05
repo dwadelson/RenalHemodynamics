@@ -115,6 +115,14 @@ server <- function(input, output, session) {
       label  = c("Aff", "Eff")
     )
     
+    # Define names for each vascular segment, in the same order as seg_df rows
+    vessel_labels <- c(
+      "Renal artery",
+      "Glomerular capillaries",
+      "Peritubular capillaries",
+      "Renal vein"
+    )
+    
     ggplot() +
       # Horizontal pressure segments
       geom_segment(
@@ -143,7 +151,7 @@ server <- function(input, output, session) {
       ) +
       scale_size_continuous(
         range  = c(8, 24),
-        limits = c(10, 30),   # fixed to slider range so sizes aren't coupled
+        limits = c(10, 30),
         guide  = "none"
       ) +
       scale_y_continuous(
@@ -151,21 +159,23 @@ server <- function(input, output, session) {
         breaks = seq(0, 140, by = 10),
         name   = "Pressure (mmHg)"
       ) +
+      labs(
+        x = "Renal vascular segment",
+        y = "Pressure (mmHg)"
+      ) +
       coord_cartesian(xlim = c(-0.05, 1.45)) +
-      # labs(
-      #   title = "Pressure profile and arteriolar diameters",
-      #   x = NULL
-      # ) +
-      theme_minimal(base_size = 14) +
+      theme_minimal(base_size = 16) +
       theme(
-        axis.text.x  = element_blank(),
-        axis.ticks.x = element_blank(),
+        axis.title.x  = element_text(size = 16, margin = margin(t = 10)),
+        axis.text.x   = element_blank(),     # hide labels
+        axis.ticks.x  = element_blank(),     # hide ticks
         panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
         legend.position = "bottom",
         legend.title = element_blank(),
         plot.margin = margin(5.5, 20, 5.5, 5.5)
       )
-  })  #diameterPlot
+  }) #diameterPlot
   
   # Bar plot showing absolute RBF and GFR (mL/min)
   output$flowHist <- renderPlot({
