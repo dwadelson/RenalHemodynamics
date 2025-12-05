@@ -88,7 +88,7 @@ server <- function(input, output, session) {
       P       = c(Pa,         P_gc,       P_pc,       local_Pv),
       label   = c(
         paste0("Renal artery\n(",           round(Pa, 1), " mmHg)"),
-        paste0("Glomerular capillaries\n(", round(P_gc, 1), " mmHg)"),
+        paste0("Glomerular\ncapillaries\n(", round(P_gc, 1), " mmHg)"),
         paste0("Peritubular\ncapillaries\n(", round(P_pc, 1), " mmHg)"),
         paste0("Renal vein\n(",             round(local_Pv, 1), " mmHg)")
       )

@@ -13,7 +13,7 @@ d_eff_baseline <- 18  # efferent arteriole diameter
 Ra0 <- 27.3       # afferent resistance at d_aff_baseline
 Re0 <- 51.0       # efferent resistance at d_eff_baseline
 
-Rp   <- 1.0       # post-glomerular resistance (lumped peritubular/venous)
+Rp   <- 8.5       # post-glomerular resistance (lumped peritubular/venous)
 P_bs <- 15        # Bowman's space pressure (mmHg)
 Pi_gc <- 25       # glomerular oncotic pressure (mmHg)
 
