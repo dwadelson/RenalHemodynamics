@@ -36,6 +36,18 @@ server <- function(input, output, session) {
     compute_absolute_rbf_gfr(hemo())
   })
   
+  # Resistances of afferent and efferent arterioles
+  resistances <- reactive({
+    h <- hemo()
+    data.frame(
+      vessel = factor(
+        c("Afferent arteriole", "Efferent arteriole"),
+        levels = c("Afferent arteriole", "Efferent arteriole")
+      ),
+      Resistance = c(h$Ra, h$Re)
+    )
+  })
+  
   
   # --- Layout constants for x positions -------------------------------------
   # Short segments left-to-right: artery -> glomerulus -> peritubular -> vein
@@ -162,7 +174,7 @@ server <- function(input, output, session) {
     ggplot(df, aes(x = Variable, y = Value, fill = Variable)) +
       geom_col(width = 0.6) +
       geom_text(
-        aes(label = sprintf("%.0f mL/min", Value)),
+        aes(label = sprintf("%.0f\nmL/min", Value)),
         vjust = -0.5,
         size = 5
       ) +
@@ -178,23 +190,38 @@ server <- function(input, output, session) {
       theme_minimal(base_size = 16) +
       theme(
         legend.position = "none",   # remove legend (optional)
-        axis.text.x = element_text(vjust = 0.5),
+        axis.text.x = element_text(vjust = 0.5, angle = 75),
         plot.margin = margin(10, 10, 10, 10)
       )
   }) #flowHist
   
-  # --- Text outputs ---------------------------------------------------------
+
+  # Bar plot showing Ra and Re (same color scheme as arteriole circles)
+  output$resHist <- renderPlot({
+    df <- resistances()
+    
+    ymax <- max(df$Resistance) * 1.2
+    
+    ggplot(df, aes(x = vessel, y = Resistance, fill = vessel)) +
+      geom_col(width = 0.6) +
+      geom_text(
+        aes(label = sprintf("%.1f", Resistance)),
+        vjust = -0.5,
+        size  = 5
+      ) +
+      scale_y_continuous(
+        limits = c(0, ymax),
+        name   = "Hybrid Resistance Units\n(mmHg * min/ml)"
+      ) +
+      labs(x = NULL) +
+      theme_minimal(base_size = 16) +
+      theme(
+        legend.position = "none",
+        axis.text.x     = element_text(vjust = 0.5, angle = 75),
+        plot.margin     = margin(10, 10, 10, 10)
+      )
+  })
   
-  # output$pressureText <- renderPrint({
-  #   h <- hemo()
-  #   
-  #   cat(
-  #     sprintf("Renal mean arterial pressure:       %5.1f mmHg\n", h$Pa),
-  #     sprintf("Glomerular capillary pressure: %5.1f mmHg\n", h$P_gc),
-  #     sprintf("Peritubular capillary pressure:%5.1f mmHg\n", h$P_pc),
-  #     sprintf("Renal venous pressure:         %5.1f mmHg\n", Pv)
-  #   )
-  # })
   
   output$flowText <- renderPrint({
     h  <- hemo()
@@ -209,6 +236,7 @@ server <- function(input, output, session) {
       "  (Bowman's space and oncotic pressures held constant in this model.)\n"
     )
   })
+  
   # ---- Diagnostics: run once per R session ---------------------------------
   
   if (DIAGNOSTICS) { 

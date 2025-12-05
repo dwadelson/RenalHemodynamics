@@ -1,11 +1,11 @@
 # ui.R
 
+library(shiny)
+
 ui <- fluidPage(
   titlePanel("Arteriolar Diameter and Glomerular Hemodynamics"),
   
-  # Styling for the text outputs:
-  # - pressureText: wraps nicely
-  # - flowText: no word wrap, horizontal scroll if long
+  # Styling for text outputs
   tags$style(HTML("
     #pressureText {
       white-space: pre-wrap;
@@ -18,55 +18,72 @@ ui <- fluidPage(
     }
   ")),
   
-  # Main 3-column layout: sliders | main hemo plot | RBF/GFR bars
+  # Main layout row: controls | pressures/diameters | flows/resistances
   fluidRow(
-    # Column 1: controls
+    # -------- LEFT COLUMN: CONTROLS --------
     column(
-      width = 3,
+      width = 2,
       h4("Adjust hemodynamics"),
+      
       sliderInput(
         "Pa", "Renal arterial pressure (mmHg)",
-        min   = 60, max = 180,
+        min   = 60,
+        max   = 180,
         value = baselinePa,
         step  = 5
       ),
       sliderInput(
         "d_aff", "Afferent arteriole diameter (µm)",
-        min   = 10, max = 30,
+        min   = 10,
+        max   = 30,
         value = d_aff_baseline,
         step  = 1
       ),
       sliderInput(
         "d_eff", "Efferent arteriole diameter (µm)",
-        min   = 10, max = 30,
+        min   = 10,
+        max   = 30,
         value = d_eff_baseline,
         step  = 1
       ),
+      
       radioButtons(
         "res_mode",
         label   = "Arteriolar constraint",
         choices = c(
-          "Free"                     = "free",
-          "Lock Ra/Re ratio"         = "ratio",
-          "Lock (Ra + Re) total"     = "sum"
+          "Free"                 = "free",
+          "Lock Ra/Re ratio"     = "ratio",
+          "Lock (Ra + Re) total" = "sum"
         ),
-        selected = "free",
-        inline   = FALSE
+        selected = "free"
       )
     ),
     
-    # Column 2: combined pressures + diameter plot + pressure text
+    # -------- MIDDLE COLUMN: PRESSURES & DIAMETERS --------
     column(
       width = 5,
       h4("Pressures and arteriolar diameters"),
       plotOutput("diameterPlot", height = "500px"),
+      h5("Key pressures (mmHg)"),
+      verbatimTextOutput("pressureText")
     ),
     
-    # Column 3: absolute RBF & GFR bar plot
+    # -------- RIGHT COLUMN: FLOWS & RESISTANCES --------
     column(
-      width = 4,
-      h4("Renal blood flow and GFR"),
-      plotOutput("flowHist", height = "500px")
+      width = 5,
+      h4("Flows and arteriolar resistances"),
+      fluidRow(
+        column(
+          width = 6,
+          h5("RBF and GFR"),
+          plotOutput("flowHist", height = "500px")
+        ),
+        column(
+          width = 6,
+          h5("Ra and Re"),
+          plotOutput("resHist", height = "500px")
+        )
+      )
     )
   ),
   
@@ -74,13 +91,13 @@ ui <- fluidPage(
   fluidRow(
     column(
       width = 12,
-      h4("Assumptions"),
+      h4("Flow & filtration (numerical values)"),
       verbatimTextOutput("flowText")
     )
   ),
   
   # Optional diagnostics at the bottom when DIAGNOSTICS == TRUE
-  if (DIAGNOSTICS) {
+  if (exists("DIAGNOSTICS") && isTRUE(DIAGNOSTICS)) {
     fluidRow(
       column(
         width = 12,
