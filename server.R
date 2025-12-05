@@ -88,7 +88,7 @@ server <- function(input, output, session) {
       x      = c(aff_x, eff_x),
       y      = c(aff_y, eff_y),
       diam   = c(h$d_aff, h$d_eff),
-      label  = c("Afferent\narteriole", "Efferent\narteriole")
+      label  = c("Aff", "Eff")
     )
     
     ggplot() +
@@ -102,7 +102,7 @@ server <- function(input, output, session) {
       geom_text(
         data = seg_df,
         aes(x = x_mid, y = P_label, label = label),
-        size = 4
+        size = 4.5
       ) +
       # Arteriole circles
       geom_point(
@@ -114,7 +114,7 @@ server <- function(input, output, session) {
       geom_text(
         data = circle_df,
         aes(x = x, y = y, label = label),
-        size = 3,
+        size = 5,
         fontface = "bold"
       ) +
       scale_size_continuous(
