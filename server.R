@@ -173,11 +173,12 @@ server <- function(input, output, session) {
         cat("=== Shiny diagnostics ===\n")
         cat("Time: ", as.character(Sys.time()), "\n\n", sep = "")
         
-        cat("R.version:\n")
-        print(R.version)
-        
-        cat("\n.libPaths():\n")
-        print(.libPaths())
+        cat("R.home():\n"); print(R.home())
+        cat("R.version:\n"); print(R.version)
+
+        cat("\n.libPaths():\n"); print(.libPaths())
+        cat("\nSystem shiny path:\n"); print(system.file(package = "shiny"))
+        cat("\nSys.which('R'):\n"); print(Sys.which("R"))
         
         cat("\nLoaded packages:\n")
         # sessionInfo will show ggplot2/shiny versions, etc.
