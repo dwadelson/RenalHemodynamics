@@ -64,7 +64,10 @@ ui <- fluidPage(
           h4("Flow & Filtration (relative)"),
           verbatimTextOutput("flowText")
         )
-      )
+      ),
+      hr(),
+      h4("Diagnostics (server environment)"),
+      verbatimTextOutput("diagnostics")
     )
   )
 )

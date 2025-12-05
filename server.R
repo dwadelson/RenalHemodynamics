@@ -162,5 +162,42 @@ server <- function(input, output, session) {
       "  (Bowman's space and oncotic pressures held constant in this model.)\n"
     )
   })
+  # ---- Diagnostics: run once per R session ---------------------------------
+  diag_text <- reactiveVal("Diagnostics not yet collected.")
+  
+  observeEvent(TRUE, {
+    # Collect info
+    txt <- capture.output({
+      cat("=== Shiny diagnostics ===\n")
+      cat("Time: ", as.character(Sys.time()), "\n\n", sep = "")
+      
+      cat("R.version:\n")
+      print(R.version)
+      
+      cat("\n.libPaths():\n")
+      print(.libPaths())
+      
+      cat("\nLoaded packages:\n")
+      # sessionInfo will show ggplot2/shiny versions, etc.
+      print(sessionInfo())
+      
+      cat("\nCapabilities (png / cairo / X11):\n")
+      print(capabilities()[c("png", "cairo", "X11")])
+    })
+    
+    # Store for display in the UI
+    diag_text(paste(txt, collapse = "\n"))
+    
+    # Also send to the Shiny log once
+    if (!exists(".diag_printed", envir = .GlobalEnv)) {
+      assign(".diag_printed", TRUE, envir = .GlobalEnv)
+      cat(paste(txt, collapse = "\n"), "\n", file = stderr())
+    }
+  }, once = TRUE)
+  
+  output$diagnostics <- renderText({
+    diag_text()
+  })
+  
   
 }
