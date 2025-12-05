@@ -91,7 +91,7 @@ server <- function(input, output, session) {
       geom_text(
         data = seg_df,
         aes(x = x_mid, y = P_label, label = label),
-        size = 4
+        size = 5
       ) +
       # Arteriole circles
       geom_point(
