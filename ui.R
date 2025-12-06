@@ -26,7 +26,7 @@ ui <- fluidPage(
       h4("Adjust hemodynamics"),
       sliderInput(
         "Pa", "Renal arterial pressure (mmHg)",
-        min   = 60,
+        min   = 30,
         max   = 180,
         value = baselinePa,
         step  = 5
