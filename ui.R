@@ -36,14 +36,14 @@ ui <- fluidPage(
         min   = 10,
         max   = 30,
         value = d_aff_baseline,
-        step  = 1
+        step  = 0.5
       ),
       sliderInput(
         "d_eff", "Efferent arteriole diameter (µm)",
         min   = 10,
         max   = 30,
         value = d_eff_baseline,
-        step  = 1
+        step  = 0.5
       ),
       radioButtons(
         "res_mode",
