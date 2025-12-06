@@ -149,6 +149,17 @@ server <- function(input, output, session) {
         size = 5,
         fontface = "bold"
       ) +
+      # Diameter text below each circle (e.g., "18 µm")
+      geom_text(
+        data = circle_df,
+        aes(
+          x = x,
+          y = y - 7,
+          label = paste0(round(diam, 1), " µm")
+        ),
+        size = 5,
+        fontface = "bold"
+      ) +
       scale_size_continuous(
         range  = c(8, 24),
         limits = c(10, 30),
