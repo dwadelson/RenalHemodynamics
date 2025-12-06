@@ -113,7 +113,7 @@ ui <- fluidPage(
   fluidRow(
     column(
       width = 12,
-      h4("Flow & filtration (numerical values)"),
+      h4("Model assumptions"),
       verbatimTextOutput("flowText")
     )
   ),

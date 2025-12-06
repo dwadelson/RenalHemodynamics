@@ -256,10 +256,13 @@ server <- function(input, output, session) {
     rel_NFP <- h$NFP / bl$NFP0
     
     cat(
+      "Initial arteriolar resistances represent the total for all nephrons in parallel\n",
+      "  based on typical resting renal blood flow and renal arterial to venous pressure gradients\n",
+      "Changes in resistances, RBF and GFR are calculated based on changes in arteriolar diameters using Poiseulle's equation\n",
       "Net Filtration Pressure (NFP) is a simplified proxy for filtration:\n",
       "  NFP ≈ P_gc - P_Bowman's space - π_gc\n",
       "  (Bowman's space and oncotic pressures held constant in this model.)\n"
-    )
+    ) #cat
   })
   
 }
